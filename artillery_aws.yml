@@ -1,0 +1,22 @@
+# /content/:id
+config:
+  name: '/content/:id'
+  target: "http://ec2-52-88-58-117.us-west-2.compute.amazonaws.com:4000"
+  phases:
+    - duration: 60
+      arrivalRate: 10
+      rampTo: 30
+    - duration: 240
+      arrivalRate: 30
+  payload:
+    path: "id_mil.csv"
+    fields:
+      - "id"
+scenarios:
+  - flow:
+    - loop:
+      - get:
+          url: "/content/{{ id }}"
+      count: 75
+      think: 0.5
+        

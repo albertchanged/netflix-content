@@ -1,0 +1,103 @@
+version: '3'
+services:
+  web:
+    image: albertchanged/netflix:content
+    deploy:
+      replicas: 3
+      # resources:
+      #   limits:
+      #     cpus: "0.1"
+      #     memory: 50M
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints: [node.role != manager]
+    ports:
+      - '4000:4000'
+    environment:
+      PORT: '4000'
+      HOST: '0.0.0.0'
+      REDIS_HOST: 'redis'
+      CASSANDRA_HOST: 'cassandra0'
+    # volumes: '.:/app/'
+    # depends_on:
+    #   - cassandra0
+    #   - redis
+    networks:
+      - webnet
+    command: 'npm start'
+  visualizer:
+    image: dockersamples/visualizer:stable
+    ports:
+      - '8080:8080'
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    networks:
+      - webnet
+  redis:
+    image: redis
+    ports:
+      - '6379:6379'
+    volumes:
+      - '/home/docker/data:/data'
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    command: redis-server --appendonly yes
+    networks:
+      - webnet
+  cassandra0:
+    image: albertchanged/netflix:cassandra
+    ports:
+        - '9042:9042'
+        - '9160:9160'
+        - '7199:7199'
+        - '8778:8778'
+    volumes: 
+      - volume1:/var/lib/cassandra
+    command: 'cassandra -f'
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    environment:
+      - CASSANDRA_START_RPC=true
+      - CASSANDRA_SEEDS=cassandra0
+      - CASSANDRA_CLUSTER_NAME=content_cluster
+      - CASSANDRA_LISTEN_ADDRESS=cassandra0
+    networks:
+      - webnet
+  # cassandra1:
+  #   image: albertchanged/netflix:cassandra
+  #   environment:
+  #     - CASSANDRA_SEEDS=cassandra0
+  #     - CASSANDRA_CLUSTER_NAME=content_cluster
+  #   depends_on:
+  #     - cassandra0
+  #   command: bash -c 'sleep 60;  /docker-entrypoint.sh cassandra -f'
+  #   ports:
+  #       - '9142:9042'
+  #   # volumes: '/db/cassandra:/db/cassandra'
+  #   networks:
+  #     - webnet
+  # cassandra2:
+  #   image: albertchanged/netflix:cassandra
+  #   environment:
+  #     - CASSANDRA_SEEDS=cassandra0
+  #     - CASSANDRA_CLUSTER_NAME=content_cluster
+  #   command: bash -c 'sleep 120;  /docker-entrypoint.sh cassandra -f'
+  #   depends_on:
+  #     - cassandra0
+  #   ports:
+  #     - '9242:9042'
+  #   # volumes: '/db/cassandra:/db/cassandra'
+  #   networks:
+  #     - webnet
+volumes:
+  volume1:
+    external:
+      name: cassandra0-vol
+networks:
+  webnet:

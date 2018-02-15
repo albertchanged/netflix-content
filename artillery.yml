@@ -1,0 +1,41 @@
+# /content/:id
+config:
+  name: '/content/:id'
+  target: "http://localhost:1337"
+  phases:
+    - duration: 60
+      arrivalRate: 10
+      rampTo: 30
+    - duration: 240
+      arrivalRate: 30
+  payload:
+    path: "id.csv"
+    fields:
+      - "id"
+    # order: "sequence"
+scenarios:
+  - flow:
+    - loop:
+      - get:
+          url: "/content/{{ id }}"
+      count: 50
+      think: 0.5
+
+# /home
+# config:
+#   name: '/home'
+#   target: "http://localhost:1337"
+#   phases:
+#     - duration: 10
+#       arrivalRate: 10
+#       rampTo: 30
+#     - duration: 20
+#       arrivalRate: 30
+# scenarios:
+#   - flow:
+#     - loop:
+#       - get:
+#           url: "/home"
+#       count: 200
+#       think: 1
+        

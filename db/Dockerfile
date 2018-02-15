@@ -1,0 +1,9 @@
+FROM cassandra
+
+WORKDIR /app/db
+
+COPY schema.cql ./
+
+EXPOSE 9042
+EXPOSE 9142
+EXPOSE 9242
