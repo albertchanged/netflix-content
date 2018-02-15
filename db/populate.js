@@ -3,10 +3,8 @@ const moment = require('moment');
 const fs = require('fs');
 
 var insertfds = [];
-// var idfds = [];
 for (var i = 0; i < 5; i++) {
   insertfds.push(fs.openSync('insert' + i, 'a+'));
-  // idfds.push(fs.openSync('id' + i, 'a+'));
 }
 
 for (var i = 0; i < 5000000; i++) {
@@ -26,8 +24,6 @@ for (var i = 0; i < 5000000; i++) {
   var randomRatingNum = Math.floor(Math.random() * ratingArray.length);
   var rating = ratingArray[randomRatingNum];
   const insertData = `${id}|{'${faker.name.findName().replace('\'', '\'\'')}','${faker.name.findName().replace('\'', '\'\'')}'}|${faker.name.jobDescriptor().replace('\'', '\'\'')}|${faker.name.findName().replace('\'', '\'\'')}|${Math.floor(Math.random() * (7200 - 1800 + 1)) + 1800}|{'${faker.commerce.department()}','${faker.commerce.department()}'}|${faker.random.boolean()}|${faker.random.boolean()}|${faker.internet.domainName()}|${rating}|{${regionsStr.slice(0, regionsStr.length - 1)}}|${releaseDate}|${faker.internet.domainName()}|${faker.name.title().replace('\'', '\'\'')}|${faker.internet.domainName()}`;
-  // fs.writeSync(idfds[i % 5], `${id}\n`);
+
   fs.writeSync(insertfds[i % 5], `${insertData}\n`);
 }
-
-// copy video (id,cast,description,director,duration,genres,isMovie,isOriginal,locationURI,rating,regions,releaseDate,thumbnailURL,title,trailerURL) from 'insert0' with delimiter = '|';

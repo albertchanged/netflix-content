@@ -22,20 +22,20 @@ scenarios:
       think: 0.5
 
 # /home
-# config:
-#   name: '/home'
-#   target: "http://localhost:1337"
-#   phases:
-#     - duration: 10
-#       arrivalRate: 10
-#       rampTo: 30
-#     - duration: 20
-#       arrivalRate: 30
-# scenarios:
-#   - flow:
-#     - loop:
-#       - get:
-#           url: "/home"
-#       count: 200
-#       think: 1
+config:
+  name: '/home'
+  target: "http://localhost:1337"
+  phases:
+    - duration: 10
+      arrivalRate: 10
+      rampTo: 30
+    - duration: 20
+      arrivalRate: 30
+scenarios:
+  - flow:
+    - loop:
+      - get:
+          url: "/home"
+      count: 200
+      think: 1
         

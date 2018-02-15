@@ -4,10 +4,6 @@ services:
     image: albertchanged/netflix:content
     deploy:
       replicas: 3
-      # resources:
-      #   limits:
-      #     cpus: "0.1"
-      #     memory: 50M
       restart_policy:
         condition: on-failure
       placement:
@@ -15,14 +11,8 @@ services:
     ports:
       - '4000:4000'
     environment:
-      PORT: '4000'
-      HOST: '0.0.0.0'
       REDIS_HOST: 'redis'
       CASSANDRA_HOST: 'cassandra0'
-    # volumes: '.:/app/'
-    # depends_on:
-    #   - cassandra0
-    #   - redis
     networks:
       - webnet
     command: 'npm start'
@@ -69,6 +59,13 @@ services:
       - CASSANDRA_LISTEN_ADDRESS=cassandra0
     networks:
       - webnet
+volumes:
+  volume1:
+    external:
+      name: cassandra0-vol
+networks:
+  webnet:
+
   # cassandra1:
   #   image: albertchanged/netflix:cassandra
   #   environment:
@@ -95,9 +92,3 @@ services:
   #   # volumes: '/db/cassandra:/db/cassandra'
   #   networks:
   #     - webnet
-volumes:
-  volume1:
-    external:
-      name: cassandra0-vol
-networks:
-  webnet:

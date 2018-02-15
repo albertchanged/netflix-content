@@ -24,10 +24,6 @@ statsDClient.socket.on('error', () => {
 router.get('/home', async (ctx) => {
   try {
     const homeVideos = { homePage: await db.getAllHomeVideos() };
-
-    // Remember to periodically send CFS these homeVideos too
-    // axios.post --- 300 videoIds
-
     if (Object.keys(homeVideos).length > 0) {
       ctx.status = 200;
       ctx.body = {
@@ -82,8 +78,6 @@ router.get('/content/:id', async (ctx) => {
 router.post('/content', async (ctx) => {
   try {
     const video = await db.insertVideo(ctx.request.body);
-    // axios.post('/content', { data: {} })
-    //   .then(())
     ctx.status = 201;
     ctx.body = {
       status: 'success',

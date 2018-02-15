@@ -37,7 +37,7 @@ module.exports = {
 
     return client.execute(insertQuery, { prepare: true })
       .then((success) => {
-        // Somehow send new video's data to CFS
+        console.log('Successfully inserted video!', success);
       })
       .catch((err) => {
         throw new Error('Cannot insert video');
