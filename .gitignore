@@ -79,7 +79,6 @@ db/insert1
 db/insert2
 db/insert3
 db/insert4
-schema.cql
 requests/
 images/
 home/
